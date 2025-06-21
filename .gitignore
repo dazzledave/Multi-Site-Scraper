@@ -44,6 +44,7 @@ venv.bak/
 
 # Test files
 test_*.py
+test_flask_integration.py
 
 # Environment variables
 .env
