@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Site Product Scraper</title>
+    <link id="bootstrap-css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body[data-bs-theme="dark"] {
+            background-color: #181a1b;
+            color: #f8f9fa;
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        .scraper-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .scraper-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .scraper-card.selected {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        .scraper-card input[type="checkbox"] {
+            display: none;
+        }
+        .scraper-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .search-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        .scraper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .status-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+        /* Styles for scraper cards within search section */
+        .search-section .scraper-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .search-section .scraper-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .search-section .scraper-card.selected {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+        }
+        .search-section .scraper-card .card-body {
+            color: white;
+        }
+        .search-section .scraper-card .card-title {
+            color: white;
+        }
+        .search-section .scraper-card .card-text {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+<div class="container mt-5">
+    <button class="btn btn-secondary toggle-btn" id="toggleThemeBtn">
+        <i class="bi bi-moon-stars"></i>
+    </button>
+    
+    <div class="text-center mb-4">
+        <h1 class="display-4 mb-3">
+            <i class="bi bi-search-heart"></i> Multi-Site Product Scraper
+        </h1>
+        <p class="lead">Search across multiple e-commerce platforms simultaneously</p>
+    </div>
+
+    <div class="search-section">
+        <form method="POST" id="searchForm">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" name="product_name" 
+                               placeholder="Enter product name (e.g., 'wireless headphones')" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-light btn-lg w-100" type="submit">
+                        <i class="bi bi-search"></i> Search Products
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Scraper Selection (inside the form) -->
+            <div class="mt-4">
+                <h6 class="text-white mb-3">
+                    <i class="bi bi-gear"></i> Select Scrapers
+                </h6>
+                <div class="scraper-grid">
+                    {% for scraper_id, scraper_config in scrapers.items() %}
+                        <div class="card scraper-card" data-scraper="{{ scraper_id }}">
+                            <div class="card-body text-center position-relative">
+                                <input type="checkbox" name="scrapers" value="{{ scraper_id }}" id="{{ scraper_id }}-checkbox">
+                                
+                                <!-- Scraper Icon -->
+                                <div class="scraper-icon">
+                                    {% if scraper_id == 'jumia' %}
+                                        <i class="bi bi-shop text-primary"></i>
+                                    {% elif scraper_id == 'amazon' %}
+                                        <i class="bi bi-box-seam text-warning"></i>
+                                    {% elif scraper_id == 'ebay' %}
+                                        <i class="bi bi-tags text-info"></i>
+                                    {% elif scraper_id == 'aliexpress' %}
+                                        <i class="bi bi-globe text-danger"></i>
+                                    {% elif scraper_id == 'walmart' %}
+                                        <i class="bi bi-bag text-success"></i>
+                                    {% else %}
+                                        <i class="bi bi-plus-circle text-muted"></i>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Scraper Name and Description -->
+                                <h6 class="card-title">{{ scraper_config.name }}</h6>
+                                <p class="card-text small">{{ scraper_config.description }}</p>
+                                
+                                <!-- Status Badge -->
+                                {% if scraper_config.status == 'available' %}
+                                    <span class="badge bg-success status-badge">Available</span>
+                                {% else %}
+                                    <span class="badge bg-secondary status-badge">Coming Soon</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-outline-light" id="selectAllBtn">
+                        <i class="bi bi-check-all"></i> Select All Available
+                    </button>
+                    <button type="button" class="btn btn-outline-light" id="clearAllBtn">
+                        <i class="bi bi-x-circle"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle"></i>
+        <strong>Tip:</strong> Select one or more scrapers above, then enter your search term to find products across multiple platforms.
+    </div>
+</div>
+
+<script>
+    // Theme toggle logic
+    const body = document.body;
+    const toggleBtn = document.getElementById('toggleThemeBtn');
+    const THEME_KEY = 'bs-theme';
+
+    function setTheme(theme) {
+        body.setAttribute('data-bs-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+        // Adjust table class for dark/light
+        document.querySelectorAll('table').forEach(table => {
+            if (theme === 'dark') {
+                table.classList.add('table-dark');
+            } else {
+                table.classList.remove('table-dark');
+            }
+        });
+    }
+
+    // On load, set theme from localStorage
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+    setTheme(savedTheme);
+
+    toggleBtn.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+    });
+
+    // Scraper selection logic
+    const scraperCards = document.querySelectorAll('.scraper-card');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const searchForm = document.getElementById('searchForm');
+
+    // Handle card clicks
+    scraperCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const checkbox = this.querySelector('input[type="checkbox"]');
+            const statusBadge = this.querySelector('.status-badge');
+            
+            // Only allow selection if scraper is available
+            if (statusBadge.textContent === 'Available') {
+                checkbox.checked = !checkbox.checked;
+                this.classList.toggle('selected', checkbox.checked);
+            }
+        });
+    });
+
+    // Select all available scrapers
+    selectAllBtn.addEventListener('click', () => {
+        scraperCards.forEach(card => {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            const statusBadge = card.querySelector('.status-badge');
+            
+            if (statusBadge.textContent === 'Available') {
+                checkbox.checked = true;
+                card.classList.add('selected');
+            }
+        });
+    });
+
+    // Clear all selections
+    clearAllBtn.addEventListener('click', () => {
+        scraperCards.forEach(card => {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            checkbox.checked = false;
+            card.classList.remove('selected');
+        });
+    });
+
+    // Form validation
+    searchForm.addEventListener('submit', function(e) {
+        const selectedScrapers = document.querySelectorAll('input[name="scrapers"]:checked');
+        
+        if (selectedScrapers.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one scraper before searching.');
+            return false;
+        }
+    });
+</script>
+</body>
+</html> 
