@@ -2,6 +2,9 @@
 
 A modern web application that allows users to search for products across multiple e-commerce platforms simultaneously. Built with Flask and featuring a beautiful, responsive UI.
 
+![image](https://github.com/user-attachments/assets/8fb5dbcd-7059-477d-8e6e-ca217d78ef65)
+
+
 ## 🌟 Features
 
 - **Multi-Platform Search**: Search across multiple e-commerce sites at once
@@ -106,14 +109,6 @@ The application includes comprehensive error handling:
 - **Interactive Cards**: Click to select/deselect scrapers
 - **Real-time Feedback**: Loading states and progress indicators
 - **Modern Styling**: Beautiful gradients and animations
-
-## 📊 Results Display
-
-- **Statistics Dashboard**: Total products, sources, price ranges
-- **Grouped Results**: Products organized by source
-- **Product Cards**: Images, prices, and direct links
-- **Table View**: Detailed comparison in collapsible table
-- **Export Options**: Easy sharing and comparison
 
 ## 🤝 Contributing
 
