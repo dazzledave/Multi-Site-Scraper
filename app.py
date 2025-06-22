@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from jumia_scraper import scrape_jumia
+from amazon_scraper import scrape_amazon
+from aliexpress_scraper import scrape_aliexpress
+from temu_scraper import scrape_temu
 
 app = Flask(__name__)
 
@@ -13,20 +16,26 @@ AVAILABLE_SCRAPERS = {
     },
     'amazon': {
         'name': 'Amazon',
-        'function': None,
+        'function': scrape_amazon,
         'description': 'Global e-commerce giant',
-        'status': 'coming_soon'
+        'status': 'available'
+    },
+    'aliexpress': {
+        'name': 'AliExpress',
+        'function': scrape_aliexpress,
+        'description': 'Global online retail',
+        'status': 'available'
+    },
+    'temu': {
+        'name': 'Temu',
+        'function': scrape_temu,
+        'description': 'Fast fashion & lifestyle',
+        'status': 'available'
     },
     'ebay': {
         'name': 'eBay',
         'function': None,
         'description': 'Online auction & shopping',
-        'status': 'coming_soon'
-    },
-    'aliexpress': {
-        'name': 'AliExpress',
-        'function': None,
-        'description': 'Global online retail',
         'status': 'coming_soon'
     },
     'walmart': {
@@ -67,7 +76,10 @@ def results():
                 if scraper_config['function'] and scraper_config['status'] == 'available':
                     try:
                         # Call the scraper function
-                        scraper_results = scraper_config['function'](query, max_results=5)
+                        if scraper_id in ['aliexpress', 'temu']:
+                            scraper_results = scraper_config['function'](query, max_results=5, debug_mode=False)
+                        else:
+                            scraper_results = scraper_config['function'](query, max_results=5)
                         
                         # Add source information to each result
                         for result in scraper_results:
