@@ -15,11 +15,11 @@ A modern web application that allows users to search for products across multipl
 
 ## 🛠️ Currently Supported Platforms
 
-- ✅ **Jumia** - African e-commerce platform
-- 🔄 **Amazon** - Coming Soon
-- 🔄 **eBay** - Coming Soon
-- 🔄 **AliExpress** - Coming Soon
-- 🔄 **Walmart** - Coming Soon
+-  **Jumia** - African e-commerce platform
+-  **Amazon** - Global e-commerce & cloud computing giant (based in the US)
+-  **eBay** - Coming Soon
+-  **AliExpress** -  Global online retail service owned by Alibaba (based in China), focuses on cross-border e-commerce
+- **Walmart** - Coming Soon
 
 ## 🚀 Quick Start
 
