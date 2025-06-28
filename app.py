@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from jumia_scraper import scrape_jumia
 from amazon_scraper import scrape_amazon
 from aliexpress_scraper import scrape_aliexpress
-from temu_scraper import scrape_temu
 from melcom_scraper import scrape_melcom
 from compughana_scraper import scrape_compughana
 
@@ -26,12 +25,6 @@ AVAILABLE_SCRAPERS = {
         'name': 'AliExpress',
         'function': scrape_aliexpress,
         'description': 'Global online retail',
-        'status': 'available'
-    },
-    'temu': {
-        'name': 'Temu',
-        'function': scrape_temu,
-        'description': 'Fast fashion & lifestyle',
         'status': 'available'
     },
     'ebay': {
@@ -90,7 +83,7 @@ def results():
                 if scraper_config['function'] and scraper_config['status'] == 'available':
                     try:
                         # Call the scraper function
-                        if scraper_id in ['aliexpress', 'temu']:
+                        if scraper_id == 'aliexpress':
                             scraper_results = scraper_config['function'](query, max_results=5, debug_mode=False)
                         else:
                             scraper_results = scraper_config['function'](query, max_results=5)
