@@ -7,7 +7,7 @@ import re
 
 def scrape_jumia(query, max_results=5):
     # Get API key from environment variable or use default
-    SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY', 'afb25771be473a63ced548fe95761266')
+    SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY', '38bde1db8b81b05543c7c870d085a6f7')
     
     # Try multiple ScraperAPI configurations
     configs_to_try = [

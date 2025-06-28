@@ -3,6 +3,8 @@ from jumia_scraper import scrape_jumia
 from amazon_scraper import scrape_amazon
 from aliexpress_scraper import scrape_aliexpress
 from temu_scraper import scrape_temu
+from melcom_scraper import scrape_melcom
+from compughana_scraper import scrape_compughana
 
 app = Flask(__name__)
 
@@ -43,6 +45,18 @@ AVAILABLE_SCRAPERS = {
         'function': None,
         'description': 'American retail corporation',
         'status': 'coming_soon'
+    },
+    'melcom': {
+        'name': 'Melcom',
+        'function': scrape_melcom,
+        'description': 'Ghanaian retail corporation',
+        'status': 'available'
+    },
+    'compughana': {
+        'name': 'CompuGhana',
+        'function': scrape_compughana,
+        'description': 'Ghanaian IT products retailer',
+        'status': 'available'
     }
 }
 
